@@ -5,7 +5,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: email
+                property: username
 
     encoders:
         # use your user class name here
