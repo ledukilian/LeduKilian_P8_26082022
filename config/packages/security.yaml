@@ -13,7 +13,7 @@ security:
             # Use native password encoder
             # This value auto-selects the best possible hashing algorithm
             # (i.e. Sodium when available).
-            algorithm: auto
+            algorithm: bcrypt
 
     firewalls:
         dev:
@@ -22,6 +22,13 @@ security:
         main:
             anonymous: lazy
             provider: users_in_memory
+            guard:
+                authenticators:
+                    - App\Security\AppAuthenticator
+            logout:
+                path: logout
+                # where to redirect after logout
+                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
