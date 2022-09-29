@@ -20,7 +20,8 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: lazy
+            anonymous: true
+            lazy: true
             provider: users_in_memory
             guard:
                 authenticators:
