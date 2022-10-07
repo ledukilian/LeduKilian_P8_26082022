@@ -21,7 +21,7 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=25, unique=true)
@@ -39,7 +39,7 @@ class User implements UserInterface
      * @Assert\NotBlank(message="Vous devez saisir une adresse email.")
      * @Assert\Email(message="Le format de l'adresse n'est pas correcte.")
      */
-    private $email;
+    private String $email;
 
     /**
      * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user")
@@ -51,7 +51,7 @@ class User implements UserInterface
         $this->tasks = new ArrayCollection();
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -61,7 +61,7 @@ class User implements UserInterface
         return $this->username;
     }
 
-    public function setUsername($username)
+    public function setUsername(String $username)
     {
         $this->username = $username;
     }
@@ -76,17 +76,17 @@ class User implements UserInterface
         return $this->password;
     }
 
-    public function setPassword($password)
+    public function setPassword(String $password)
     {
         $this->password = $password;
     }
 
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function setEmail($email)
+    public function setEmail(String $email)
     {
         $this->email = $email;
     }
