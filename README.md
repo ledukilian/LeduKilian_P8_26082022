@@ -3,7 +3,7 @@
 
 
 ## 🧩 Prerequisites
-TODO
+The project use Symfony 5.4.12 and require PHP >7.4.
 
 
 ## 📌️ Install steps
