@@ -27,12 +27,12 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=25, unique=true)
      * @Assert\NotBlank(message="Vous devez saisir un nom d'utilisateur.")
      */
-    private $username;
+    private string $username;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $password;
+    private ?string $password;
 
     /**
      * @ORM\Column(type="string", length=60, unique=true)
@@ -44,7 +44,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user")
      */
-    private $tasks;
+    private ArrayCollection $tasks;
 
     public function __construct()
     {
@@ -56,7 +56,7 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -71,7 +71,7 @@ class User implements UserInterface
         return null;
     }
 
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -91,7 +91,7 @@ class User implements UserInterface
         $this->email = $email;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         return array('ROLE_USER');
     }

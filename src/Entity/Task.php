@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Datetime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,7 +22,7 @@ class Task
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private Datetime $createdAt;
 
     /**
      * @ORM\Column(type="string")
@@ -38,17 +39,17 @@ class Task
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isDone;
+    private bool $isDone;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tasks")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user;
+    private ?User $user;
 
     public function __construct()
     {
-        $this->createdAt = new \Datetime();
+        $this->createdAt = new Datetime();
         $this->isDone = false;
     }
 
@@ -57,12 +58,12 @@ class Task
         return $this->id;
     }
 
-    public function getCreatedAt()
+    public function getCreatedAt(): Datetime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt($createdAt): void
     {
         $this->createdAt = $createdAt;
     }
@@ -72,7 +73,7 @@ class Task
         return $this->title;
     }
 
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->title = $title;
     }
@@ -82,17 +83,17 @@ class Task
         return $this->content;
     }
 
-    public function setContent($content)
+    public function setContent($content): void
     {
         $this->content = $content;
     }
 
-    public function isDone()
+    public function isDone(): bool
     {
         return $this->isDone;
     }
 
-    public function toggle($flag)
+    public function toggle($flag): void
     {
         $this->isDone = $flag;
     }
