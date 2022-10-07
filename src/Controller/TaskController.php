@@ -26,7 +26,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/create", name="task_create")
      */
-    public function createAction(Request $request): RedirectResponse|Response
+    public function createAction(Request $request)
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
@@ -50,7 +50,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
      */
-    public function editAction(Task $task, Request $request): RedirectResponse|Response
+    public function editAction(Task $task, Request $request)
     {
         $form = $this->createForm(TaskType::class, $task);
 
