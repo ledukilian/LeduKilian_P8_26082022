@@ -1,0 +1,9 @@
+// <root-dir>/site.webmanifest
+{
+  "name": "ToDo&Co",
+  "short_name": "ToDoCo",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "Créer des todolist et traitez-les !"
+}
