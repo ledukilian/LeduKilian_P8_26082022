@@ -44,7 +44,12 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user")
      */
-    private ArrayCollection $tasks;
+    private $tasks;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
 
     public function __construct()
     {
@@ -93,7 +98,7 @@ class User implements UserInterface
 
     public function getRoles(): array
     {
-        return array('ROLE_USER');
+        return $this->roles;
     }
 
     public function eraseCredentials(): void
@@ -126,6 +131,13 @@ class User implements UserInterface
                 $task->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
