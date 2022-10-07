@@ -25,7 +25,7 @@
         "symfony/yaml": "5.4.*"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.0",
+        "symfony/maker-bundle": "^1.43",
         "symfony/phpunit-bridge": "^6.1",
         "symfony/stopwatch": "5.4.*",
         "symfony/web-profiler-bundle": "5.4.*"
