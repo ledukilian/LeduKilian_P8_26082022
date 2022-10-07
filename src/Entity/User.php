@@ -61,7 +61,7 @@ class User implements UserInterface
         return $this->username;
     }
 
-    public function setUsername(String $username)
+    public function setUsername(String $username): void
     {
         $this->username = $username;
     }
@@ -76,7 +76,7 @@ class User implements UserInterface
         return $this->password;
     }
 
-    public function setPassword(String $password)
+    public function setPassword(String $password): void
     {
         $this->password = $password;
     }
@@ -86,7 +86,7 @@ class User implements UserInterface
         return $this->email;
     }
 
-    public function setEmail(String $email)
+    public function setEmail(String $email): void
     {
         $this->email = $email;
     }
@@ -96,7 +96,7 @@ class User implements UserInterface
         return array('ROLE_USER');
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 
