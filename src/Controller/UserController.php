@@ -24,7 +24,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/create", name="user_create")
      */
-    public function createAction(Request $request, UserPasswordHasherInterface $passwordHasher): Response|RedirectResponse
+    public function createAction(Request $request, UserPasswordHasherInterface $passwordHasher): RedirectResponse|Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -54,7 +54,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/edit", name="user_edit")
      */
-    public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordHasher): Response|RedirectResponse
+    public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordHasher): RedirectResponse|Response
     {
         $form = $this->createForm(UserType::class, $user);
 
