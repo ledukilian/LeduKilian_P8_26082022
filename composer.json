@@ -26,6 +26,7 @@
         "symfony/yaml": "5.4.*"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "symfony/maker-bundle": "^1.43",
         "symfony/phpunit-bridge": "^6.1",
         "symfony/stopwatch": "5.4.*",
