@@ -3,11 +3,17 @@
 
 
 ## 🧩 Prerequisites
-The project use Symfony 5.4.12 and require PHP >7.4.
+The project use `Symfony 5.4.12` and require `PHP >8.0`.
 
 
 ## 📌️ Install steps
-TODO
+1. First you need to copy the repository by using git clone `https://github.com/ledukilian/LeduKilian_P8_26082022`
+
+**2.** Use `composer install` command to install required packages
+
+**3.** Copy the `.env` file located in the root folder to `.env.local` and fill `APP_ENV`, `DATABASE_URL` AND `MAIL_DSN` (you can use MailDev)
+
+**4.** Run `php bin/console server:start` to create a build for the app
 
 
 ## 📖️ Documentation
