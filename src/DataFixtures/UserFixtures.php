@@ -8,6 +8,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class UserFixtures extends Fixture
 {
+    public const ANONYMOUS_USER_REFERENCE = 'anonymous-user';
     public const ADMIN_USER_REFERENCE = 'admin-user';
     public const SIMPLE_USER_REFERENCE = 'simple-user';
     public const SIMPLE_USER2_REFERENCE = 'simple-user2';
@@ -16,6 +17,13 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        /*  Creating annonymous user */
+        $userAnon = new User();
+        $userAnon->setUsername('Anonyme');
+        $userAnon->setEmail('anonyme@todoco.fr');
+        $userAnon->setRoles(["ROLE_ANONYMOUS"]);
+        $userAnon->setPassword($this::DEMO_PASSWORD);
+
         /*  Creating admin user */
         $userAdmin = new User();
         $userAdmin->setUsername('Administrateur');
@@ -37,11 +45,13 @@ class UserFixtures extends Fixture
         $simpleUser2->setRoles(["ROLE_USER"]);
         $simpleUser2->setPassword($this::DEMO_PASSWORD);
 
+        $manager->persist($userAnon);
         $manager->persist($userAdmin);
         $manager->persist($simpleUser);
         $manager->persist($simpleUser2);
         $manager->flush();
 
+        $this->addReference(self::ANONYMOUS_USER_REFERENCE, $userAnon);
         $this->addReference(self::ADMIN_USER_REFERENCE, $userAdmin);
         $this->addReference(self::SIMPLE_USER_REFERENCE, $simpleUser);
         $this->addReference(self::SIMPLE_USER2_REFERENCE, $simpleUser2);
