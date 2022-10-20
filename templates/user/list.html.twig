@@ -16,7 +16,8 @@
                 <tr>
                     <th>#</th>
                     <th>Nom d'utilisateur</th>
-                    <th>Adresse d'utilisateur</th>
+                    <th>Adresse mail</th>
+                    <th>Rôle</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -27,7 +28,12 @@
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
                         <td>
-                            <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Edit</a>
+                            {% if user.roles[0] == "ROLE_ANONYMOUS" %}<span class="font-weight-bold text-muted">Annonyme</span>{% endif %}
+                            {% if user.roles[0] == "ROLE_USER" %}<span class="font-weight-bold text-primary">Utilisateur</span>{% endif %}
+                            {% if user.roles[0] == "ROLE_ADMIN" %}<span class="font-weight-bold text-danger">Administrateur</span>{% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Modifier</a>
                         </td>
                     </tr>
                 {% endfor %}

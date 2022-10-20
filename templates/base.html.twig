@@ -16,6 +16,13 @@
         <!-- Custom CSS -->
         <link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
 
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -25,12 +32,30 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-light navbar-fixed-top" style="background-color: #e3f2fd;" role="navigation">
+        <nav class="navbar navbar-light navbar-fixed-top" style="background-color: #1F1F1F;" role="navigation">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/">To Do List app</a>
-
-                    <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
+                    <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" class="mr-2"/>
+                    <a class="navbar-brand float-right" href="/">To Do List</a>
+                </div>
+                <div class="navbar-nav vcenter">
+                    <form class="navbar-form navbar-left">
+                        <a href="{{ path('homepage') }}" class="btn btn-primary"><i class="fa-solid fa-house mr-2"></i>Accueil</a>
+                        <a href="{{ path('task_list') }}" class="btn btn-primary"><i class="fa-solid fa-check mr-2"></i>Tâches</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('user_list') }}" class="btn btn-primary"><i class="fa-solid fa-users mr-2"></i>Utilisateurs</a>
+                        {% endif %}
+                    </form>
+                </div>
+                <div class="navbar-nav vcenter pull-right">
+                    <form class="navbar-form navbar-right">
+                        {% if app.user %}
+                            <a href="{{ path('logout') }}" class="btn btn-danger">Se déconnecter</a>
+                        {% endif %}
+                        {% if not app.user and 'login' != app.request.attributes.get('_route') %}
+                            <a href="{{ path('login') }}" class="btn btn-success">Se connecter</a>
+                        {% endif %}
+                    </form>
                 </div>
             </div>
         </nav>
@@ -38,15 +63,6 @@
         <!-- Page Content -->
         <div class="container">
             <div class="row">
-                <a href="{{ path('user_create') }}" class="btn btn-primary">Créer un utilisateur</a>
-
-                {% if app.user %}
-                <a href="{{ path('logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
-                {% endif %}
-
-                {% if not app.user and 'login' != app.request.attributes.get('_route') %}
-                <a href="{{ path('login') }}" class="btn btn-success">Se connecter</a>
-                {% endif %}
             </div>
 
             <div class="row">
