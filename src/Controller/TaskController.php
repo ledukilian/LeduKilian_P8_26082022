@@ -17,7 +17,6 @@ class TaskController extends AbstractController
      */
     public function listAction(): Response
     {
-
         return $this->render('task/list.html.twig', [
             'tasks' => $this->getDoctrine()->getRepository('App:Task')->findBy([], ['createdAt' => 'DESC', 'isDone' => 'ASC']),
         ]);
@@ -52,22 +51,27 @@ class TaskController extends AbstractController
      */
     public function editAction(Task $task, Request $request): RedirectResponse|Response
     {
-        $form = $this->createForm(TaskType::class, $task);
+        if ($this->isGranted('edit-task', $task)) {
+            $form = $this->createForm(TaskType::class, $task);
 
-        $form->handleRequest($request);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->getDoctrine()->getManager()->flush();
 
-            $this->addFlash('success', 'La tâche a bien été modifiée.');
+                $this->addFlash('success', 'La tâche a bien été modifiée.');
 
+                return $this->redirectToRoute('task_list');
+            }
+
+            return $this->render('task/edit.html.twig', [
+                'form' => $form->createView(),
+                'task' => $task,
+            ]);
+        } else {
+            $this->addFlash('error', 'Vous n\'avez pas les droits pour modifier cette tâche.');
             return $this->redirectToRoute('task_list');
         }
-
-        return $this->render('task/edit.html.twig', [
-            'form' => $form->createView(),
-            'task' => $task,
-        ]);
     }
 
     /**
@@ -88,12 +92,16 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task): RedirectResponse
     {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
+        if ($this->isGranted('edit-task', $task)) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($task);
+            $em->flush();
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
 
+        } else {
+            $this->addFlash('error', 'Vous n\'avez pas les droits pour supprimer cette tâche.');
+        }
         return $this->redirectToRoute('task_list');
     }
 }

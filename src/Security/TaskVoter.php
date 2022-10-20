@@ -10,8 +10,8 @@ use Symfony\Component\Security\Core\Security;
 class TaskVoter extends Voter
 {
     /* All task functionnalities */
-    const CREATE = 'create-task';
     const VIEW = 'view-task';
+    const CREATE = 'create-task';
     const EDIT = 'edit-task';
     const DELETE = 'delete-task';
     private Security $security;
