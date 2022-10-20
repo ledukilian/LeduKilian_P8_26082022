@@ -22,7 +22,6 @@ body {
 }
 
 .caption {
-    height: 130px;
     overflow: hidden;
 }
 
@@ -42,6 +41,7 @@ body {
 
 .thumbnail {
     padding: 0;
+    margin-bottom: 10px;
 }
 
 .thumbnail .caption-full {
@@ -100,4 +100,8 @@ footer {
     display: inline-block;
     vertical-align: middle;
     float: none;
+}
+
+p {
+    margin: 0;
 }
