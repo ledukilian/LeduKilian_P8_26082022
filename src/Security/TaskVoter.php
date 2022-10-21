@@ -10,8 +10,6 @@ use Symfony\Component\Security\Core\Security;
 class TaskVoter extends Voter
 {
     /* All task functionnalities */
-    const VIEW = 'view-task';
-    const CREATE = 'create-task';
     const EDIT = 'edit-task';
     const DELETE = 'delete-task';
     private Security $security;
@@ -32,7 +30,7 @@ class TaskVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
         /* If attribute is not supported, return false */
-        if (!in_array($attribute, [self::CREATE, self::VIEW, self::EDIT, self::DELETE])) {
+        if (!in_array($attribute, [self::EDIT, self::DELETE])) {
             return false;
         }
 
@@ -62,9 +60,6 @@ class TaskVoter extends Voter
         $task = $subject;
 
         switch ($attribute) {
-            case self::VIEW:
-            case self::CREATE:
-                return true;
             case self::DELETE:
             case self::EDIT:
                 return $this->isOwnerOrAdmin($task, $user);
