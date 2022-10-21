@@ -92,7 +92,7 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task): RedirectResponse
     {
-        if ($this->isGranted('edit-task', $task)) {
+        if ($this->isGranted('delete-task', $task)) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($task);
             $em->flush();
