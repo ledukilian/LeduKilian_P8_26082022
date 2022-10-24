@@ -34,11 +34,18 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $task->setUser($this->getUser());
+
+            if ($this->getUser()) {
+                $task->setUser($this->getUser());
+            } else {
+                $task->setUser($this->getDoctrine()->getRepository('App:User')->findOneBy(['username' => 'Anonyme']));
+            }
+
+
             $em->persist($task);
             $em->flush();
 
-            $this->addFlash('success', 'La tâche a été bien été ajoutée.');
+            $this->addFlash('success', 'La tâche a bien été ajoutée.');
 
             return $this->redirectToRoute('task_list');
         }
