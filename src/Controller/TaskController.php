@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,17 +16,17 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks", name="task_list")
      */
-    public function listAction(): Response
+    public function listAction(ManagerRegistry $doctrine): Response
     {
         return $this->render('task/list.html.twig', [
-            'tasks' => $this->getDoctrine()->getRepository('App:Task')->findBy([], ['createdAt' => 'DESC', 'isDone' => 'ASC']),
+            'tasks' => $doctrine->getRepository('App:Task')->findBy([], ['createdAt' => 'DESC', 'isDone' => 'ASC']),
         ]);
     }
 
     /**
      * @Route("/tasks/create", name="task_create")
      */
-    public function createAction(Request $request): RedirectResponse|Response
+    public function createAction(Request $request, ManagerRegistry $doctrine): RedirectResponse|Response
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
@@ -33,12 +34,12 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $doctrine->getManager();
 
             if ($this->getUser()) {
                 $task->setUser($this->getUser());
             } else {
-                $task->setUser($this->getDoctrine()->getRepository('App:User')->findOneBy(['username' => 'Anonyme']));
+                $task->setUser($doctrine->getRepository('App:User')->findOneBy(['username' => 'Anonyme']));
             }
 
 
