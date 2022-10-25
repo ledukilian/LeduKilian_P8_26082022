@@ -57,7 +57,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
      */
-    public function editAction(Task $task, Request $request): RedirectResponse|Response
+    public function editAction(Task $task, Request $request, ManagerRegistry $doctrine): RedirectResponse|Response
     {
         if ($this->isGranted('edit-task', $task)) {
             $form = $this->createForm(TaskType::class, $task);
@@ -65,7 +65,7 @@ class TaskController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->getDoctrine()->getManager()->flush();
+                $doctrine->getManager()->flush();
 
                 $this->addFlash('success', 'La tâche a bien été modifiée.');
 
@@ -85,10 +85,10 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
      */
-    public function toggleTaskAction(Task $task): RedirectResponse
+    public function toggleTaskAction(Task $task, ManagerRegistry $doctrine): RedirectResponse
     {
         $task->toggle(!$task->isDone());
-        $this->getDoctrine()->getManager()->flush();
+        $doctrine->getManager()->flush();
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
@@ -98,10 +98,10 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      */
-    public function deleteTaskAction(Task $task): RedirectResponse
+    public function deleteTaskAction(Task $task, ManagerRegistry $doctrine): RedirectResponse
     {
         if ($this->isGranted('delete-task', $task)) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $doctrine->getManager();
             $em->remove($task);
             $em->flush();
 

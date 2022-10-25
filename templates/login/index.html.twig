@@ -6,7 +6,7 @@
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
-
+    <h2>Connexion</h2>
     <form action="{{ path('login') }}" method="post">
         <label for="username">Nom d'utilisateur :</label>
         <input type="text" value="{{ last_username }}" name="_username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>

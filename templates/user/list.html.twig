@@ -7,7 +7,7 @@
 {% block body %}
     {% if users|length == 0 %}
         <div class="alert alert-warning" role="alert">
-            Il n'y a pas encore d'utilisateur enregistré. <a href="{{ path('user_create') }}" class="btn btn-warning pull-right">Créer un utilisateur</a>
+            Il n'y a pas encore d'utilisateur enregistré. <a href="{{ path('user_create') }}" class="btn btn-success pull-right">Créer un utilisateur</a>
         </div>
     {% else %}
         <div class="row">
@@ -40,5 +40,7 @@
                 </tbody>
             </table>
         </div>
+        <a href="{{ path('user_create') }}" class="btn btn-success">Créer un utilisateur</a>
     {% endif %}
+
 {% endblock %}
