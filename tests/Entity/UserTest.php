@@ -16,41 +16,45 @@ class UserTest extends KernelTestCase
 
         $user = (new User())
             ->setEmail('admin@todoco.fr')
-            ->setPassword('admin')
+            ->setPassword('password')
             ->setRoles(['ROLE_USER'])
             ->setUsername('admin');
 
         $this->assertEquals('admin@todoco.fr', $user->getEmail());
-        $this->assertEquals('admin', $user->getPassword());
+        $this->assertEquals('password', $user->getPassword());
         $this->assertEquals(['ROLE_USER'], $user->getRoles());
         $this->assertEquals('admin', $user->getUserIdentifier());
     }
 
-    public function testUserPermissions(): void
+    public function checkTasks(): void
     {
+        self::bootKernel();
+
         $userRepository = static::getContainer()->get(UserRepository::class);
         $user = $userRepository->findOneBy(['email' => 'admin@todoco.fr']);
-        $task = $user->getTasks()->first();
 
-        $this->assertTrue($user->isGranted('edit-task', $task));
-        $this->assertTrue($user->isGranted('delete-task', $task));
+        $this->assertEquals(true, !empty($user->getTasks()));
     }
 
-    public function testTasks(): void
+    public function testAddRemoveTasks(): void
     {
+        self::bootKernel();
+
         $userRepository = static::getContainer()->get(UserRepository::class);
         $user = $userRepository->findOneBy(['email' => 'admin@todoco.fr']);
+        $beforeAdding = sizeof($user->getTasks());
 
         $task = new Task();
-        $task->setTitle('test');
-        $task->setContent('test');
+        $task->setTitle('Task title');
+        $task->setContent('Task content');
         $task->setCreatedAt(new DateTime());
-        $task->setUser($user);
         $task->toggle(false);
 
-        //$this->assertEquals(instanceof Collection, is_array($user->getTasks()));
-        //$this->assertEquals($user, $user->addTask($task));
-        //$this->assertEquals(true, $user->removeTask($task));
+        $user->addTask($task);
+        $this->assertEquals($beforeAdding + 1, sizeof($user->getTasks()));
+
+        $user->removeTask($task);
+        $this->assertEquals($beforeAdding, sizeof($user->getTasks()));
     }
 
 }

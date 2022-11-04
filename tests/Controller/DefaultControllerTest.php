@@ -15,6 +15,7 @@ class DefaultControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h2', 'Bienvenue');
+        //$this->assertSelectorTextContains('a', 'Se connecter');
     }
 
     public function testHomePageLoggedIn(): void
@@ -27,15 +28,17 @@ class DefaultControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h2', 'Bienvenue');
+        $this->assertSelectorExists('a', 'Se déconnecter');
     }
 
-    public function testLogin(): void
+    /* Test if the page contains a button "Se connecter" */
+    public function testPageContainsLoginButton(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/login');
+        $client->request('GET', '/');
 
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains("h2", "Connexion");
+        $this->assertSelectorExists('a', 'Se connecter');
     }
+
 
 }

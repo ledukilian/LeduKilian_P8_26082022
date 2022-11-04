@@ -64,7 +64,7 @@ class TaskVoter extends Voter
             case self::EDIT:
                 return $this->isOwnerOrAdmin($task, $user);
         }
-        throw new \LogicException('This code should not be reached!');
+        return false;
     }
 
     /**
@@ -74,11 +74,11 @@ class TaskVoter extends Voter
      */
     private function isOwnerOrAdmin(Task $task, User $user): bool
     {
-        /* If the user is Admin */
-        if ($this->security->isGranted('ROLE_ADMIN')) {
+        /* The user is owner of the task */
+        if ($user === $task->getUser()) {
             return true;
-            /* Or the user is owner of the task */
-        } elseif ($user === $task->getUser()) {
+            /* The user is Admin */
+        } elseif ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
         /* Else he can't delete the trick */
