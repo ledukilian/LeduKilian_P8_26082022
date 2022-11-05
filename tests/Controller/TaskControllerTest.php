@@ -106,4 +106,38 @@ class TaskControllerTest extends WebTestCase
 
     }
 
+    public function testTaskEditWithoutPermission(): void
+    {
+
+    }
+
+    public function testTaskEditWithPermission(): void
+    {
+        $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+
+        $admin = $userRepository->findBy(['email' => "admin@todoco.fr"])[0];
+        $client->loginUser($admin);
+        $client->followRedirects();
+
+        $taskTest = $admin->getTasks()[0];
+
+        $crawler = $client->request('GET', 'tasks/'.$taskTest->getId().'/edit');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $form = $crawler->selectButton("Modifier")->form();
+
+        $this->assertEquals($taskTest->getTitle(), $form["task[title]"]->getValue());
+        $this->assertEquals($taskTest->getContent(), $form["task[content]"]->getValue());
+
+        $form["task[title]"]->setValue("This is the new title");
+        $client->submit($form);
+
+        $modifiedTask = $taskRepository->findOneBy(['title' => "This is the new title"]);
+
+        $this->assertEquals(true, !empty($modifiedTask));
+        $this->assertSelectorExists('div', "Superbe ! La tâche a bien été modifiée.");
+    }
+
 }

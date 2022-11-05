@@ -63,7 +63,6 @@ class UserControllerTest extends WebTestCase
         ]);
 
         //$this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('div', "Superbe ! L'utilisateur a bien été ajouté.");
 
         $testUser = $userRepository->findBy(['username' => "TestUsername"])[0];
         $this->assertEquals("TestUsername", $testUser->getUsername());
