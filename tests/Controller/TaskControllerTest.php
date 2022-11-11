@@ -6,6 +6,7 @@ use App\Entity\Task;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Security\Core\Security;
 
 class TaskControllerTest extends WebTestCase
 {
@@ -108,7 +109,17 @@ class TaskControllerTest extends WebTestCase
 
     public function testTaskEditWithoutPermission(): void
     {
+        $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
 
+        $admin = $userRepository->findBy(['email' => "judas.bricot@todoco.fr"])[0];
+        $client->loginUser($admin);
+        $client->followRedirects();
+
+        $taskTest = $taskRepository->findBy(['title' => "Test task"])[0];
+        $crawler = $client->request('GET', 'tasks/'.$taskTest->getId().'/edit');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
     public function testTaskEditWithPermission(): void
@@ -140,4 +151,41 @@ class TaskControllerTest extends WebTestCase
         $this->assertSelectorExists('div', "Superbe ! La tâche a bien été modifiée.");
     }
 
+    public function testEditForeignTaskAsAdmin(): void
+    {
+        $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+
+        $admin = $userRepository->findBy(['email' => "admin@todoco.fr"])[0];
+        $client->loginUser($admin);
+        $client->followRedirects();
+
+        $taskTest = $taskRepository->findBy(['title' => "Task 5"])[0];
+
+        $crawler = $client->request('GET', 'tasks/'.$taskTest->getId().'/edit');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $form = $crawler->selectButton("Modifier")->form();
+
+        $this->assertEquals($taskTest->getTitle(), $form["task[title]"]->getValue());
+        $this->assertEquals($taskTest->getContent(), $form["task[content]"]->getValue());
+
+        $form["task[title]"]->setValue("Admin edit test");
+        $client->submit($form);
+
+        $modifiedTask = $taskRepository->findOneBy(['title' => "Admin edit test"]);
+
+        $this->assertEquals(true, !empty($modifiedTask));
+        $this->assertSelectorExists('div', "Superbe ! La tâche a bien été modifiée.");
+    }
+
+    public function testVoter(): void
+    {
+        $task = null;
+        $security = static::getContainer()->get(Security::class);
+        $result = $security->isGranted('edit-task', $task);
+
+        $this->assertNotEquals(true, $result);
+    }
 }

@@ -59,12 +59,10 @@ class TaskVoter extends Voter
         /** @var Task $task */
         $task = $subject;
 
-        switch ($attribute) {
-            case self::DELETE:
-            case self::EDIT:
-                return $this->isOwnerOrAdmin($task, $user);
-        }
-        return false;
+        return match ($attribute) {
+            self::DELETE, self::EDIT => $this->isOwnerOrAdmin($task, $user),
+            default => false,
+        };
     }
 
     /**

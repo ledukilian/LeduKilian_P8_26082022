@@ -23,6 +23,7 @@ class DefaultControllerTest extends WebTestCase
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
         $user = $userRepository->findOneBy(['email' => 'admin@todoco.fr']);
+
         $client->loginUser($user);
         $client->request('GET', '/');
 
