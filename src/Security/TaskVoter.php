@@ -60,9 +60,23 @@ class TaskVoter extends Voter
         $task = $subject;
 
         return match ($attribute) {
-            self::DELETE, self::EDIT => $this->isOwnerOrAdmin($task, $user),
+            self::EDIT => $this->isOwnerOrAdmin($task, $user),
+            self::DELETE => $this->deleteRights($task, $user),
             default => false,
         };
+    }
+
+    private function deleteRights(Task $task, User $user): bool
+    {
+        /* Check if the user is the owner */
+        if ($task->getUser() === $user) {
+            return true;
+            /* Anonymous task can only be deleted by admin users */
+        } elseif ($task->getUser()->getRoles() === ['ROLE_ANONYMOUS'] && $this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+        return false;
+        ;
     }
 
     /**
