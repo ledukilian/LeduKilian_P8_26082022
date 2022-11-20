@@ -23,7 +23,9 @@ class TaskControllerTest extends WebTestCase
     public function testTaskAdd(): void
     {
         $client = static::createClient();
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
         $userRepository = static::getContainer()->get(UserRepository::class);
+
         $user = $userRepository->findOneBy(['email' => 'admin@todoco.fr']);
         $client->loginUser($user);
         $crawler = $client->request('GET', '/tasks/create');
@@ -34,27 +36,24 @@ class TaskControllerTest extends WebTestCase
             'task[content]' => 'This is a test content',
         ]);
 
-        //$this->assertResponseIsSuccessful();
-        //$this->assertSelectorExists('div', "Superbe ! La tâche a bien été ajoutée.");
-        //$this->assertSelectorTextContains('div', "Superbe ! La tâche a bien été ajoutée.");
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $searchTask = $taskRepository->findOneBy(['title' => 'Test task']);
+        $this->assertEquals(true, !empty($searchTask));
     }
 
     public function testTaskAddAnonymous(): void
     {
         $client = static::createClient();
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
 
         $crawler = $client->request('GET', '/tasks/create');
 
         $crawler = $client->submitForm('Ajouter', [
-            'task[title]' => 'Test task',
+            'task[title]' => 'Another test task',
             'task[content]' => 'This is a test content',
         ]);
 
-        //$this->assertResponseIsSuccessful();
-        //$this->assertSelectorExists('div', "Superbe ! La tâche a bien été ajoutée.");
-        //$this->assertSelectorTextContains('div', "Superbe ! La tâche a bien été ajoutée.");
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $searchTask = $taskRepository->findOneBy(['title' => 'Another test task']);
+        $this->assertEquals(true, !empty($searchTask));
     }
 
     public function testToggleTask(): void
@@ -80,31 +79,37 @@ class TaskControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
 
-        $admin = $userRepository->findBy(['email' => "admin@todoco.fr"])[0];
+        $admin = $userRepository->findOneBy(['email' => "admin@todoco.fr"]);
+        $annon = $userRepository->findOneBy(['email' => "anonyme@todoco.fr"]);
         $client->loginUser($admin);
 
-        $taskTest = $admin->getTasks()[0];
+        $taskTest = $admin->getTasks()[0]->getId();
+        $crawler = $client->request('GET', '/tasks/'.$taskTest.'/delete');
 
-        $crawler = $client->request('GET', '/tasks/'.$taskTest->getId().'/delete');
+        $annonTask = $annon->getTasks()[0]->getId();
+        $crawler = $client->request('GET', '/tasks/'.$annonTask.'/delete');
 
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $searchTask = $taskRepository->findOneBy(['id' => $taskTest]);
+        $this->assertEquals(true, empty($searchTask));
 
+        $searchTask = $taskRepository->findOneBy(['id' => $annonTask]);
+        $this->assertEquals(false, empty($searchTask));
     }
 
     public function testDeleteWithoutPermission(): void
     {
-        $client = static::createClient();
-        $userRepository = static::getContainer()->get(UserRepository::class);
+       $client = static::createClient();
+       $userRepository = static::getContainer()->get(UserRepository::class);
 
-        $admin = $userRepository->findBy(['email' => "admin@todoco.fr"])[0];
+       $admin = $userRepository->findBy(['email' => "admin@todoco.fr"])[0];
 
-        $taskTest = $admin->getTasks()[0];
+       $taskTest = $admin->getTasks()[0];
 
-        $crawler = $client->request('GET', '/tasks/'.$taskTest->getId().'/delete');
+       $crawler = $client->request('GET', '/tasks/'.$taskTest->getId().'/delete');
 
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-
+       $this->assertEquals($taskTest->getUser(), $admin);
     }
 
     public function testTaskEditWithoutPermission(): void
@@ -113,13 +118,17 @@ class TaskControllerTest extends WebTestCase
         $userRepository = static::getContainer()->get(UserRepository::class);
         $taskRepository = static::getContainer()->get(TaskRepository::class);
 
-        $admin = $userRepository->findBy(['email' => "judas.bricot@todoco.fr"])[0];
-        $client->loginUser($admin);
+        $user = $userRepository->findOneBy(['email' => "judas.bricot@todoco.fr"]);
+        $client->loginUser($user);
         $client->followRedirects();
 
-        $taskTest = $taskRepository->findBy(['title' => "Test task"])[0];
+        $taskTest = $taskRepository->findOneBy(['title' => "Test task"]);
         $crawler = $client->request('GET', 'tasks/'.$taskTest->getId().'/edit');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertNotEquals($user->getId(), $taskTest->getUser()->getId());
+
+        $this->assertSelectorExists('div', "Oops ! Vous n'avez pas les droits pour modifier cette tâche.");
+
     }
 
     public function testTaskEditWithPermission(): void
