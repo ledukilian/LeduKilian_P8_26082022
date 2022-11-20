@@ -41,7 +41,8 @@
                 <div class="navbar-nav vcenter">
                     <form class="navbar-form navbar-left">
                         <a href="{{ path('homepage') }}" class="btn btn-primary"><i class="fa-solid fa-house mr-2"></i>Accueil</a>
-                        <a href="{{ path('task_list') }}" class="btn btn-primary"><i class="fa-solid fa-check mr-2"></i>Tâches</a>
+                        <a href="{{ path('task_list') }}" class="btn btn-primary"><i class="fa-solid fa-clock mr-2"></i>Tâches en cours</a>
+                        <a href="{{ path('task_done') }}" class="btn btn-primary"><i class="fa-solid fa-check mr-2"></i>Tâches terminées</a>
                         {% if is_granted('ROLE_ADMIN') %}
                             <a href="{{ path('user_list') }}" class="btn btn-primary"><i class="fa-solid fa-users mr-2"></i>Utilisateurs</a>
                         {% endif %}

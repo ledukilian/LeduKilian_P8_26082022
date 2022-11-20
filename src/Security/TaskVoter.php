@@ -10,8 +10,6 @@ use Symfony\Component\Security\Core\Security;
 class TaskVoter extends Voter
 {
     /* All task functionnalities */
-    const VIEW = 'view-task';
-    const CREATE = 'create-task';
     const EDIT = 'edit-task';
     const DELETE = 'delete-task';
     private Security $security;
@@ -32,7 +30,7 @@ class TaskVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
         /* If attribute is not supported, return false */
-        if (!in_array($attribute, [self::CREATE, self::VIEW, self::EDIT, self::DELETE])) {
+        if (!in_array($attribute, [self::EDIT, self::DELETE])) {
             return false;
         }
 
@@ -61,15 +59,24 @@ class TaskVoter extends Voter
         /** @var Task $task */
         $task = $subject;
 
-        switch ($attribute) {
-            case self::VIEW:
-            case self::CREATE:
-                return true;
-            case self::DELETE:
-            case self::EDIT:
-                return $this->isOwnerOrAdmin($task, $user);
+        return match ($attribute) {
+            self::EDIT => $this->isOwnerOrAdmin($task, $user),
+            self::DELETE => $this->deleteRights($task, $user),
+            default => false,
+        };
+    }
+
+    private function deleteRights(Task $task, User $user): bool
+    {
+        /* Check if the user is the owner */
+        if ($task->getUser() === $user) {
+            return true;
+            /* Anonymous task can only be deleted by admin users */
+        } elseif ($task->getUser()->getRoles() === ['ROLE_ANONYMOUS'] && $this->security->isGranted('ROLE_ADMIN')) {
+            return true;
         }
-        throw new \LogicException('This code should not be reached!');
+        return false;
+        ;
     }
 
     /**
@@ -79,11 +86,11 @@ class TaskVoter extends Voter
      */
     private function isOwnerOrAdmin(Task $task, User $user): bool
     {
-        /* If the user is Admin */
-        if ($this->security->isGranted('ROLE_ADMIN')) {
+        /* The user is owner of the task */
+        if ($user === $task->getUser()) {
             return true;
-            /* Or the user is owner of the task */
-        } elseif ($user === $task->getUser()) {
+            /* The user is Admin */
+        } elseif ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
         /* Else he can't delete the trick */

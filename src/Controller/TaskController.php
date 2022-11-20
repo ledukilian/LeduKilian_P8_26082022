@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,17 +16,27 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks", name="task_list")
      */
-    public function listAction(): Response
+    public function listAction(ManagerRegistry $doctrine): Response
     {
         return $this->render('task/list.html.twig', [
-            'tasks' => $this->getDoctrine()->getRepository('App:Task')->findBy([], ['createdAt' => 'DESC', 'isDone' => 'ASC']),
+            'tasks' => $doctrine->getRepository('App:Task')->findBy(['isDone' => 0], ['createdAt' => 'DESC', 'isDone' => 'ASC']),
+        ]);
+    }
+
+    /**
+     * @Route("/tasks/done", name="task_done")
+     */
+    public function showTasksDone(ManagerRegistry $doctrine): Response
+    {
+        return $this->render('task/list.html.twig', [
+            'tasks' => $doctrine->getRepository('App:Task')->findBy(['isDone' => 1], ['createdAt' => 'DESC', 'isDone' => 'ASC']),
         ]);
     }
 
     /**
      * @Route("/tasks/create", name="task_create")
      */
-    public function createAction(Request $request): RedirectResponse|Response
+    public function createAction(Request $request, ManagerRegistry $doctrine): RedirectResponse|Response
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
@@ -33,12 +44,19 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $task->setUser($this->getUser());
+            $em = $doctrine->getManager();
+
+            if ($this->getUser()) {
+                $task->setUser($this->getUser());
+            } else {
+                $task->setUser($doctrine->getRepository('App:User')->findOneBy(['username' => 'Anonyme']));
+            }
+
+
             $em->persist($task);
             $em->flush();
 
-            $this->addFlash('success', 'La tâche a été bien été ajoutée.');
+            $this->addFlash('success', 'La tâche a bien été ajoutée.');
 
             return $this->redirectToRoute('task_list');
         }
@@ -49,7 +67,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
      */
-    public function editAction(Task $task, Request $request): RedirectResponse|Response
+    public function editAction(Task $task, Request $request, ManagerRegistry $doctrine): RedirectResponse|Response
     {
         if ($this->isGranted('edit-task', $task)) {
             $form = $this->createForm(TaskType::class, $task);
@@ -57,7 +75,7 @@ class TaskController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->getDoctrine()->getManager()->flush();
+                $doctrine->getManager()->flush();
 
                 $this->addFlash('success', 'La tâche a bien été modifiée.');
 
@@ -77,10 +95,10 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
      */
-    public function toggleTaskAction(Task $task): RedirectResponse
+    public function toggleTaskAction(Task $task, ManagerRegistry $doctrine): RedirectResponse
     {
         $task->toggle(!$task->isDone());
-        $this->getDoctrine()->getManager()->flush();
+        $doctrine->getManager()->flush();
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
@@ -90,10 +108,10 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      */
-    public function deleteTaskAction(Task $task): RedirectResponse
+    public function deleteTaskAction(Task $task, ManagerRegistry $doctrine): RedirectResponse
     {
-        if ($this->isGranted('edit-task', $task)) {
-            $em = $this->getDoctrine()->getManager();
+        if ($this->isGranted('delete-task', $task)) {
+            $em = $doctrine->getManager();
             $em->remove($task);
             $em->flush();
 

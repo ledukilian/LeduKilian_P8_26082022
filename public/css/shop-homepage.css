@@ -105,3 +105,10 @@ footer {
 p {
     margin: 0;
 }
+
+h3 {
+    margin-left: 5px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: bold;
+}

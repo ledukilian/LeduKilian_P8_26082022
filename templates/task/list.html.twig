@@ -3,9 +3,19 @@
 {% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">{% endblock %}
 
 {% block body %}
-    <div class="row">
-        <a href="{{ path('task_create') }}" class="btn btn-success">Créer une nouvelle tâche</a>
-    </div>
+    {% if app.request.attributes.get('_route') == 'task_list' %}
+        <h3>
+            <i class="fa-solid fa-clock mr-2"></i>Liste des tâches en cours
+        </h3>
+        <div class="col-12">
+            <a href="{{ path('task_create') }}" class="btn btn-success">Créer une nouvelle tâche</a>
+        </div>
+    {% endif %}
+    {% if app.request.attributes.get('_route') == 'task_done' %}
+        <h3>
+            <i class="fa-solid fa-circle-check mr-2"></i>Liste des tâches terminées
+        </h3>
+    {% endif %}
     <div class="row py-2">
         {% for task in tasks %}
         <div class="col-sm-4 col-lg-4 col-md-4 py-2">
@@ -24,12 +34,16 @@
                             {% if not task.isDone %}<i class="fa-solid fa-check mr-2"></i> Marquer comme fait{% else %}<i class="fa-solid fa-xmark mr-2"></i>Marquer comme à faire{% endif %}
                         </button>
                     </form>
+                    {% if is_granted('delete-task', task) %}
                     <form action="{{ path('task_delete', {'id' : task.id }) }}">
                         <button class="btn btn-danger no-border btn-sm pull-right action-button"><i class="fa-solid fa-trash"></i></button>
                     </form>
+                    {% endif %}
+                    {% if is_granted('edit-task', task) %}
                     <form action="{{ path('task_edit', {'id' : task.id }) }}">
                         <button class="btn btn-warning no-border btn-sm pull-right action-button"><i class="fa-solid fa-pen"></i></button>
                     </form>
+                    {% endif %}
                 </div>
             </div>
         </div>

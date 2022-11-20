@@ -18,3 +18,10 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 !/public/.htaccess
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+/migrations

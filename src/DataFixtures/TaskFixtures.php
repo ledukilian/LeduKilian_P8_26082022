@@ -41,7 +41,7 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface
         $task->setTitle('Task 4');
         $task->setContent('Task 4 content');
         $task->setCreatedAt(new DateTime());
-        $task->toggle(false);
+        $task->toggle(true);
         $task->setUser($this->getReference(UserFixtures::SIMPLE_USER_REFERENCE));
         $manager->persist($task);
 
@@ -49,7 +49,7 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface
         $task->setTitle('Task 5');
         $task->setContent('Task 5 content');
         $task->setCreatedAt(new DateTime());
-        $task->toggle(false);
+        $task->toggle(true);
         $task->setUser($this->getReference(UserFixtures::SIMPLE_USER_REFERENCE));
         $manager->persist($task);
         $manager->flush();

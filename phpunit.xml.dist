@@ -15,18 +15,28 @@
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
+        <env name="BOOTSTRAP_CLEAR_CACHE_ENV" value="test"/>
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
+        <testsuite name="ToDoCo Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
 
-    <coverage processUncoveredFiles="true">
+    <coverage cacheDirectory="/tests"
+              includeUncoveredFiles="true"
+              processUncoveredFiles="true"
+              pathCoverage="false"
+              ignoreDeprecatedCodeUnits="true"
+              disableCodeCoverageIgnore="true">
         <include>
             <directory suffix=".php">src</directory>
         </include>
+        <exclude>
+            <directory suffix=".php">src/DataFixtures</directory>
+            <file>src/kernel.php</file>
+        </exclude>
     </coverage>
 
     <listeners>
