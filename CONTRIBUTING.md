@@ -1,3 +1,4 @@
+# How to contribute ?
 ## 🚀 GIT Workflow
 ### • Issues
 Create an issue for each feature or bug fix. One problem at a time. If you want to work on an issue, comment on the issue to let others know.
