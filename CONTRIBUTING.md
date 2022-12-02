@@ -25,7 +25,7 @@ In order to prevent code quality issues, SymfonyInsight is used to check the cod
 
 ❌ **If the rating is red**, you must fix the issues found before merging the pull request. **<ins>You CANNOT merge a pull request with a red rating.</in>**
 
-️✅**If the rating is green**, you can merge the pull request.
+️✅ **If the rating is green**, you can merge the pull request.
 
 💡️**Note** : You must have a SymfonyInsight account and be connected to it to see the results of the analysis. Best wat to keep the code clean is to install the SymfonyInsight plugin in your IDE.
 
