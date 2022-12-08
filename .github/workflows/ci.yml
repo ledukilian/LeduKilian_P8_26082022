@@ -33,13 +33,13 @@ jobs:
         run: composer install --no-interaction --no-progress
 
       # Install Symfony CLI
-      - name: Symfony CLI
-        run: |
-          curl -sS https://get.symfony.com/cli/installer
+      #- name: Symfony CLI
+      #  run: |
+      #    curl -sS https://get.symfony.com/cli/installer
 
       # Check vulnerabilities
-      - name: Symfony Check Vulnerabilities
-        run: symfony check:security
+      #- name: Symfony Check Vulnerabilities
+      #  run: symfony check:security
 
       # Create database for test env
       - name: Create database for test environnement
