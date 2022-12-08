@@ -40,6 +40,11 @@ Or one of the 2  other default user account :
 - [ ] `JudasBricot` | `test`
 - [ ] `AlonzoSki` | `test`
 
+## ✅ Testing
+To run tests you can use `php bin/phpunit`
+
+To generate HTML code coverage report you can use `php bin/phpunit --coverage-html public/test_coverage`
+
 
 ## 🧩 How to contribute
 
