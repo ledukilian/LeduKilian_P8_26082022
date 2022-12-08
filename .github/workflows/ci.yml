@@ -35,8 +35,7 @@ jobs:
       # Install Symfony CLI
       - name: Symfony CLI
         run: |
-          curl -sS https://get.symfony.com/cli/installer | bash
-          mv /home/runner/.symfony/bin/symfony /usr/local/bin/symfony
+          curl -sS https://get.symfony.com/cli/installer
 
       # Check vulnerabilities
       - name: Symfony Check Vulnerabilities
