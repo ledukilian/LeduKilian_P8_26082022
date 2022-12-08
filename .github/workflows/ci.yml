@@ -1,44 +1,27 @@
-name: CI
-
+name: Pipeline-CI
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
-
+    branches: [ main ]
 jobs:
-  unit-tests:
-        runs-on: ubuntu-latest
-        steps:
-        - uses: shivammathur/setup-php@2cb9b829437ee246e9b3cac53555a39208ca6d28
-          with:
-            php-version: '8.0'
-        - uses: actions/checkout@v3
-        - name: Copy .env.test.local
-          run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
-        - name: Cache Composer packages
-          id: composer-cache
-          uses: actions/cache@v3
-          with:
-            path: vendor
-            key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-            restore-keys: |
-              ${{ runner.os }}-php-
-        - name: Install Dependencies
-          run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-        - name: Create database for test environnement
-          run: |
-            php bin/console doctrine:database:create --env test
-        - name: Create database schema
-          run: |
-            php bin/console doctrine:schema:update --env test --force
-        - name: Load fixtures for test environnement
-          run: |
-            php bin/console doctrine:fixtures:load --env test --no-interaction
-        - uses: php-actions/phpunit@v3
-          with:
-            configuration: phpunit.xml.dist
-            memory_limit: 256M
+  ci:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      # https://github.com/shivammathur/setup-php (community)
+      - name: Setup PHP, extensions and composer with shivammathur/setup-php
+        uses: shivammathur/setup-php@v2
+        with:
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, iconv, json, mbstring, pdo
+        
+      - name: Cache multiple paths
+        uses: actions/cache@v2
+        with:
+          path: |
+            vendor
+          key: ${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          
+      - name: "Composer install"
+        run: composer install --no-interaction --no-progress
