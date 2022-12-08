@@ -43,7 +43,10 @@ There is a .bat script to autorun tests at the root directory of the project : *
 ✅ **If the rating is green** : you can merge the pull request.
 
 ## 📄 Code
-### • PSR-1
+### • Coding Standard
+The project use **PSR-1**, it covers basic coding style and file structure conventions, including recommendations for naming conventions, use of whitespace, and inclusion of PHP tags.
+
+
 ### • Indentation
 The project code indentation used is **2 spaces**. You can change it in your IDE settings.
 
