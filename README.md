@@ -7,11 +7,11 @@ The project use `Symfony 5.4.12` and require `PHP >8.0`.
 
 
 ## 📌️ Install steps
-1. First you need to copy the repository by using git clone `https://github.com/ledukilian/LeduKilian_P8_26082022`
+**1.** First you need to copy the repository by using git clone `https://github.com/ledukilian/LeduKilian_P8_26082022`
 
 **2.** Use `composer install` command to install required packages
 
-**3.** Copy the `.env` file located in the root folder to `.env.local` and fill `APP_ENV`, `DATABASE_URL` AND `MAIL_DSN` (you can use MailDev)
+**3.** Copy the `.env` file located in the root folder to `.env.local` and fill `APP_ENV` and `DATABASE_URL`
 
 **4.** Run `php bin/console server:start` to create a build for the app
 
@@ -21,8 +21,31 @@ TODO
 
 
 ## ⚙️ Database
-TODO
+
+**1.** Create database with `php bin/console doctrine:database:create`
+
+**2.** Update the database schema with `php bin/console doctrine:schema:update --force`
+
+You can use intial fixtures dataset with `php bin/console doctrine:fixtures:load`
 
 
 ## 🔐 Login
-TODO
+If you use the fixtures, you can use the admin account for the first login :
+
+- [ ] **Username** : `Administrateur`
+- [ ] **Password** : `test`
+
+Or one of the 2  other default user account :
+
+- [ ] `JudasBricot` | `test`
+- [ ] `AlonzoSki` | `test`
+
+## ✅ Testing
+To run tests you can use `php bin/phpunit`
+
+To generate HTML code coverage report you can use `php bin/phpunit --coverage-html public/test_coverage`
+
+
+## 🧩 How to contribute
+
+See the contribution notice here : [How to contribute](CONTRIBUTING.md)
