@@ -42,20 +42,20 @@ jobs:
       #  run: symfony check:security
 
       # Create database for test env
-      - name: Create database for test environnement
-        run: |
-          php bin/console doctrine:database:create --env test
+      #- name: Create database for test environnement
+      #  run: |
+      #    php bin/console doctrine:database:create --env test
 
       # Create database schema
-      - name: Create database schema
-        run: |
-          php bin/console doctrine:schema:update --env test --force
+      #- name: Create database schema
+      #  run: |
+      #    php bin/console doctrine:schema:update --env test --force
 
       # Load fixtures for test environnement
-      - name: Load fixtures for test environnement
-        run: |
-          php bin/console doctrine:fixtures:load --env test --no-interaction
+      #- name: Load fixtures for test environnement
+      #  run: |
+      #    php bin/console doctrine:fixtures:load --env test --no-interaction
 
       # Run PHPUnit tests
-      - name: PHP Unit
-        run: ./bin/phpunit
+      #- name: PHP Unit
+      #  run: ./bin/phpunit
