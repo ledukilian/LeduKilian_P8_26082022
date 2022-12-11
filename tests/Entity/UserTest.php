@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class UserTest extends KernelTestCase
 {
+    /* Test valid entity with getters and setters */
     public function testValidEntity(): void
     {
         self::bootKernel();
@@ -26,6 +27,7 @@ class UserTest extends KernelTestCase
         $this->assertEquals('admin', $user->getUserIdentifier());
     }
 
+    /* Test getTask() entity method */
     public function checkTasks(): void
     {
         self::bootKernel();
@@ -36,6 +38,7 @@ class UserTest extends KernelTestCase
         $this->assertEquals(true, !empty($user->getTasks()));
     }
 
+    /* Test addTask() and removeTask() entity method */
     public function testAddRemoveTasks(): void
     {
         self::bootKernel();

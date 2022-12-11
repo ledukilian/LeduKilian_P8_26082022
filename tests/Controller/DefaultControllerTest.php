@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
+    /* Check if homepage contains h2 title */
     public function testHomepage(): void
     {
         $client = static::createClient();
@@ -18,6 +19,7 @@ class DefaultControllerTest extends WebTestCase
         //$this->assertSelectorTextContains('a', 'Se connecter');
     }
 
+    /* Check if homepage contains h2 title and logout button */
     public function testHomePageLoggedIn(): void
     {
         $client = static::createClient();

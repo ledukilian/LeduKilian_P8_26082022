@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class UserControllerTest extends WebTestCase
 {
 
+    /* Test if users list is working as Admin */
     public function testUserList(): void
     {
         $client = static::createClient();
@@ -21,6 +22,7 @@ class UserControllerTest extends WebTestCase
 
     }
 
+    /* Test if users list is not working as a user (permission denied) */
     public function testUserListWithoutSession(): void {
         $client = static::createClient();
         $crawler = $client->request('GET', '/users');
@@ -28,6 +30,7 @@ class UserControllerTest extends WebTestCase
         $this->assertResponseRedirects("http://localhost/login");
     }
 
+    /* Test if user editing is working (permission allowed) */
     public function testUserEditAllowed(): void
     {
         $client = static::createClient();
@@ -40,12 +43,7 @@ class UserControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Modifier');
     }
 
-    //public function testUserEditDeny(): void
-    //{
-    //    // Exemple : Un edit de tâche non propriétaire
-    //    // Doit retourner un 403
-    //}
-
+    /* Test if user adding is working (permission allowed) */
     public function testUserAdd(): void
     {
         $client = static::createClient();
@@ -69,6 +67,7 @@ class UserControllerTest extends WebTestCase
 
     }
 
+    /* Test user adding with error */
     public function testUserAddWithDuplicatedUsername(): void
     {
         $client = static::createClient();
@@ -89,6 +88,7 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals(500, $client->getResponse()->getStatusCode());
     }
 
+    /* Test user editing with error */
     public function testEditUserWithInvalidData(): void
     {
         $client = static::createClient();
@@ -110,23 +110,24 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals(500, $client->getResponse()->getStatusCode());
     }
 
+    /* Test user editing on forbidden user (permission denied) */
     public function testEditForbiddenUser(): void
     {
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
 
-        $admin = $userRepository->findBy(['email' => "alonzo.ski@todoco.fr"])[0];
-        $client->loginUser($admin);
+        $user = $userRepository->findBy(['email' => "alonzo.ski@todoco.fr"])[0];
+        $client->loginUser($user);
 
         $client->followRedirects();
 
-        $crawler = $client->request('GET', '/users/'.$admin->getId().'/edit');
+        $crawler = $client->request('GET', '/users/'.$user->getId().'/edit');
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
+    /* Test user editing with valid data and permission */
     public function testEditUserWithValidData(): void
     {
-
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
 

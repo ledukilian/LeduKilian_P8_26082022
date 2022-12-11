@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserRepositoryTest extends WebTestCase
 {
+    /* Test entity adding */
     public function testAddEntity(): void
     {
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -24,6 +25,7 @@ class UserRepositoryTest extends WebTestCase
         $this->assertEquals($user, $search);
     }
 
+    /* Test entity removing */
     public function testRemoveEntity(): void
     {
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -35,6 +37,7 @@ class UserRepositoryTest extends WebTestCase
         $this->assertNull($user);
     }
 
+    /* Test entity password upgrade */
     public function testUpgradePasswordSuccess(): void
     {
         $userRepository = static::getContainer()->get(UserRepository::class);
@@ -42,6 +45,7 @@ class UserRepositoryTest extends WebTestCase
         $user = $userRepository->findOneBy(['email' => 'admin@todoco.fr']);
         $password = 't$is1sh4sh3dP4ssw0rd';
 
+        // In this case password is not hashed, but it's just for the case testing
         $userRepository->upgradePassword($user, $password);
 
         $this->assertEquals($password, $user->getPassword());
