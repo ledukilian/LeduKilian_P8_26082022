@@ -21,9 +21,9 @@
         <div class="col-sm-4 col-lg-4 col-md-4 py-2">
             <div class="thumbnail">
                 <div class="caption {% if not task.isDone %}post-it-todo{% else %}post-it-done{% endif %}">
-                    <h4 class="pull-right {% if not task.isDone %}text-danger{% else %}text-success{% endif %}">
+                    <div class="pull-right {% if not task.isDone %}text-danger{% else %}text-success{% endif %}">
                         {% if task.isDone %}<span class="glyphicon glyphicon-ok"></span>{% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}
-                    </h4>
+                    </div>
                     <h4 class="font-weight-bold">{{ task.title }}</h4>
                     <p class="caption thumbnail col-sm-12 col-lg-12 col-md-12">{{ task.content }}</p>
                     <p class="text-muted pull-right">Par <b>{{ task.user.username }}</b> le <b>{{ task.createdat|date('d/m/Y à H:i') }}</b></p>
