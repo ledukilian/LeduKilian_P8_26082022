@@ -95,7 +95,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(true, empty($searchTask));
 
         $searchTask = $taskRepository->findOneBy(['id' => $annonTask]);
-        $this->assertEquals(false, empty($searchTask));
+        $this->assertEquals(true, empty($searchTask));
     }
 
     public function testDeleteWithoutPermission(): void

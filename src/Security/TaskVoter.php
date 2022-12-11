@@ -72,7 +72,8 @@ class TaskVoter extends Voter
         if ($task->getUser() === $user) {
             return true;
             /* Anonymous task can only be deleted by admin users */
-        } elseif ($task->getUser()->getRoles() === ['ROLE_ANONYMOUS'] && $this->security->isGranted('ROLE_ADMIN')) {
+
+        } elseif (in_array('ROLE_ANONYMOUS', $task->getUser()->getRoles()) && $this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
         return false;
