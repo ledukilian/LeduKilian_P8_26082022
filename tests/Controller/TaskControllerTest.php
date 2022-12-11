@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\Security;
 
 class TaskControllerTest extends WebTestCase
 {
+    /* Check if task lists are working */
     public function testTaskList(): void
     {
         $client = static::createClient();
@@ -20,6 +21,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
+    /* Check if adding a task is working */
     public function testTaskAdd(): void
     {
         $client = static::createClient();
@@ -40,6 +42,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(true, !empty($searchTask));
     }
 
+    /* Check if adding a task anonymously is working */
     public function testTaskAddAnonymous(): void
     {
         $client = static::createClient();
@@ -56,6 +59,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(true, !empty($searchTask));
     }
 
+    /* Check if task toggle is working */
     public function testToggleTask(): void
     {
         $client = static::createClient();
@@ -75,6 +79,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(true, $taskTest->isDone());
     }
 
+    /* Check if task delete is working, method is deleting 2 tasks (1 annonymous and 1 user task) */
     public function testDeleteTask(): void
     {
         $client = static::createClient();
@@ -95,9 +100,10 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(true, empty($searchTask));
 
         $searchTask = $taskRepository->findOneBy(['id' => $annonTask]);
-        $this->assertEquals(false, empty($searchTask));
+        $this->assertEquals(true, empty($searchTask));
     }
 
+    /* Check if task delete permission is working */
     public function testDeleteWithoutPermission(): void
     {
        $client = static::createClient();
@@ -112,6 +118,7 @@ class TaskControllerTest extends WebTestCase
        $this->assertEquals($taskTest->getUser(), $admin);
     }
 
+    /* Check if task edit permission is working (without permissions : should not work) */
     public function testTaskEditWithoutPermission(): void
     {
         $client = static::createClient();
@@ -131,6 +138,7 @@ class TaskControllerTest extends WebTestCase
 
     }
 
+    /* Check if task edit permission is working (with permissions : should work) */
     public function testTaskEditWithPermission(): void
     {
         $client = static::createClient();
@@ -160,6 +168,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertSelectorExists('div', "Superbe ! La tâche a bien été modifiée.");
     }
 
+    /* Task edit permission testing : admin editing user task */
     public function testEditForeignTaskAsAdmin(): void
     {
         $client = static::createClient();
@@ -189,6 +198,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertSelectorExists('div', "Superbe ! La tâche a bien été modifiée.");
     }
 
+    /* Check if voter is working */
     public function testVoter(): void
     {
         $task = null;

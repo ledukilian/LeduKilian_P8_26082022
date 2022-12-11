@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class TaskTest extends KernelTestCase
 {
+    /* Test valid entity with getters and setters */
     public function testValidEntity(): void
     {
         self::bootKernel();
